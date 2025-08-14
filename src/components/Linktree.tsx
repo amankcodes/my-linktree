@@ -7,13 +7,14 @@ import {
   Globe, 
   Mail, 
   MessageCircle, 
-  Copy, 
-  Check, 
   Sun, 
   Moon,
   ChevronRight,
-  ExternalLink
+  ExternalLink,
+  User,
+  BookOpen
 } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 interface SocialLink {
   label: string;
@@ -24,8 +25,6 @@ interface SocialLink {
 
 const Linktree: React.FC = () => {
   const [isDark, setIsDark] = useState(true);
-  const [copiedEmail, setCopiedEmail] = useState(false);
-  const [copiedUPI, setCopiedUPI] = useState(false);
 
   // Load theme preference from localStorage
   useEffect(() => {
@@ -43,21 +42,6 @@ const Linktree: React.FC = () => {
 
   const toggleTheme = () => {
     setIsDark(!isDark);
-  };
-
-  const copyToClipboard = async (text: string, type: 'email' | 'upi') => {
-    try {
-      await navigator.clipboard.writeText(text);
-      if (type === 'email') {
-        setCopiedEmail(true);
-        setTimeout(() => setCopiedEmail(false), 2000);
-      } else {
-        setCopiedUPI(true);
-        setTimeout(() => setCopiedUPI(false), 2000);
-      }
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
   };
 
   // TODO: Update these URLs with your actual social media links
@@ -97,6 +81,18 @@ const Linktree: React.FC = () => {
       url: 'https://amankodes.netlify.app/',
       icon: <Globe size={24} />,
       subtitle: 'My work & projects'
+    },
+    {
+      label: 'TopMate',
+      url: 'https://topmate.io/aman_kr17',
+      icon: <User size={24} />,
+      subtitle: 'Book a call with me'
+    },
+    {
+      label: 'Blog',
+      url: 'https://hashnode.com/@aman-dev',
+      icon: <BookOpen size={24} />,
+      subtitle: 'Read my articles'
     }
   ];
 
@@ -144,21 +140,28 @@ const Linktree: React.FC = () => {
         {/* Latest section */}
         <section className="linktree-section">
           <h2 className="linktree-section-title">Latest</h2>
-          <a 
-            href={featuredLink.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="linktree-card linktree-featured"
-          >
-            <div className="linktree-card-content">
-              <ExternalLink size={24} />
-              <div className="linktree-card-text">
-                <span className="linktree-card-label">{featuredLink.label}</span>
-                <span className="linktree-card-subtitle">{featuredLink.subtitle}</span>
-              </div>
-            </div>
-            <ChevronRight size={20} className="linktree-card-arrow" />
-          </a>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="linktree-card linktree-featured w-full">
+                <div className="linktree-card-content">
+                  <ExternalLink size={24} />
+                  <div className="linktree-card-text">
+                    <span className="linktree-card-label">{featuredLink.label}</span>
+                    <span className="linktree-card-subtitle">{featuredLink.subtitle}</span>
+                  </div>
+                </div>
+                <ChevronRight size={20} className="linktree-card-arrow" />
+              </button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Stay Tuned!</DialogTitle>
+                <DialogDescription>
+                  I am working on this window, see you soon...
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </section>
 
         {/* Social links */}
@@ -194,7 +197,7 @@ const Linktree: React.FC = () => {
           <h2 className="linktree-section-title">Contact</h2>
           <div className="linktree-contact">
             <a 
-              href="mailto:aman@example.com"
+              href="mailto:bhardwajaman1705@gmail.com"
               className="linktree-card"
             >
               <div className="linktree-card-content">
@@ -207,7 +210,7 @@ const Linktree: React.FC = () => {
             </a>
             
             <a 
-              href="https://wa.me/1234567890"
+              href="https://wa.me/918252363485"
               target="_blank"
               rel="noopener noreferrer"
               className="linktree-card"
@@ -220,25 +223,6 @@ const Linktree: React.FC = () => {
               </div>
               <ChevronRight size={20} className="linktree-card-arrow" />
             </a>
-
-            {/* Copy buttons */}
-            <button
-              onClick={() => copyToClipboard('aman@example.com', 'email')}
-              className="linktree-copy-btn"
-              aria-label="Copy email address"
-            >
-              {copiedEmail ? <Check size={20} /> : <Copy size={20} />}
-              <span>{copiedEmail ? 'Copied!' : 'Copy Email'}</span>
-            </button>
-
-            <button
-              onClick={() => copyToClipboard('your-upi-id@paytm', 'upi')}
-              className="linktree-copy-btn"
-              aria-label="Copy UPI ID"
-            >
-              {copiedUPI ? <Check size={20} /> : <Copy size={20} />}
-              <span>{copiedUPI ? 'Copied!' : 'Copy UPI'}</span>
-            </button>
           </div>
         </section>
 
